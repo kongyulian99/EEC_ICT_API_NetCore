@@ -1,0 +1,58 @@
+# Thư mục git
+.git
+.gitignore
+.gitattributes
+
+# Thư mục Visual Studio
+.vs
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.dbmdl
+*.jfm
+*.pfx
+*.publishsettings
+
+# Thư mục build
+**/bin/
+**/obj/
+**/out/
+
+# Thư mục debug
+**/.vscode/
+**/.idea/
+**/*.DotSettings
+
+# Các file và thư mục tạm thời
+**/node_modules/
+**/.sass-cache/
+**/bower_components/
+**/wwwroot/lib/
+**/*.min.*
+**/logs/
+**/*.log
+**/.DS_Store
+**/Thumbs.db
+
+# Các file cấu hình có thể chứa thông tin nhạy cảm
+**/appsettings.Development.json
+**/appsettings.*.json
+!**/appsettings.json
+
+# File và thư mục khác
+**/*.md
+LICENSE
+README.md
+**/.dockerignore
+**/docker-compose*
+**/Dockerfile*
+**/*.sln.DotSettings
+**/*.sln.DotSettings.user
+
+# Thư mục test
+**/[Tt]est[Rr]esults/
+**/*.Tests/
+**/*.Test/
+**/*.UnitTests/
+**/*.IntegrationTests/ 
