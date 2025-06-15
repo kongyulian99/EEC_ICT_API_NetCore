@@ -42,6 +42,9 @@ namespace ApiService
                     policy.WithOrigins("http://localhost:4200")
                           .AllowAnyHeader()
                           .AllowAnyMethod();
+                });
+                options.AddPolicy("AllowAngularClientDeploy", policy =>
+                {
                     policy.WithOrigins("https://eec-ict-api-netcore.onrender.com/")
                           .AllowAnyHeader()
                           .AllowAnyMethod();
