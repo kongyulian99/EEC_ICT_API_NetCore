@@ -35,6 +35,7 @@ namespace ApiService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            if(services.)
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngularClient", policy =>
@@ -101,7 +102,15 @@ namespace ApiService
                 app.UseDeveloperExceptionPage();                
             }
 
-            app.UseCors("AllowAngularClient");
+            if (env.IsDevelopment()) // Nếu đang ở môi trường Development
+            {
+                app.UseCors("AllowAngularClient"); // Áp dụng chính sách cho localhost
+            }
+            else // Môi trường Production (trên Render.com)
+            {
+                app.UseCors("AllowAngularClientDeploy"); // Áp dụng chính sách cho frontend đã deploy
+            }
+            //app.UseCors("AllowAngularClient");
 
             app.UseHttpsRedirection();
 
