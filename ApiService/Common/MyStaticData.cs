@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using ApiService.Core.RedisHelper.Services;
 using ApiService.Business;
+using Microsoft.AspNetCore.Builder;
 
 namespace ApiService.Common
 {
     public static class MyStaticData
     {
-        public static void AddDataToCache(this IHost host)
+        public static void AddDataToCache(this WebApplication app)
         {
-            var services = host.Services.CreateScope();
+            var services = app.Services.CreateScope();
             var _memoryCache = services.ServiceProvider.GetService<IMemoryCache>();
             //var _redisCache = service.ServiceProvider.GetService<IRedisClientService>();
             //var lstMappingCommand = ServiceFactory.MappingCommand.GetListMappingCommand().Result;

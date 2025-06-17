@@ -12,8 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "swagger",
-      //"launchUrl": "api/WeatherForecast/get",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -21,8 +20,7 @@
     "ApiService": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger",
-      //"launchUrl": "api/WeatherForecast/get",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
