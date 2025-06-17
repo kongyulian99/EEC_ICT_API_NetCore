@@ -11,7 +11,7 @@ namespace ApiService.Entity
         public QuestionType Question_Type { get; set; }
         public string Question_Type_Name { get; set; }
         public string Content { get; set; }
-        public JsonDocument Question_Data_Json { get; set; }
+        public string Question_Data_Json { get; set; }
         //public string Question_Data_Json { get; set; }
         public string Explanation { get; set; }
         public Enum_DifficutyLevel Difficulty_Level { get; set; }

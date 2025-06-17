@@ -1,5 +1,6 @@
 # Stage 1: Build the application
-FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build-env
+# Sử dụng image SDK của .NET 8.0 làm base cho giai đoạn xây dựng (build)
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
 
 # Sao chép file solution (.sln) vào thư mục làm việc gốc của container.
@@ -17,9 +18,6 @@ COPY ApiService.Implement/ ApiService.Implement/
 COPY ApiService.Interface/ ApiService.Interface/
 # Nếu bạn có thêm thư mục project nào khác nằm ngang cấp, hãy thêm dòng COPY tương ứng.
 
-# Sao chép thư mục Db/ nếu bạn cần nó trong container (thường không cần cho build/run API)
-# COPY Db/ Db/
-
 # Chạy lệnh khôi phục các gói NuGet cho toàn bộ solution.
 # Lệnh này sẽ tìm ApiService.sln tại /app/ApiService.sln và các project con
 # tại các đường dẫn tương đối (ví dụ: /app/ApiService.Core/ApiService.Core.csproj).
@@ -36,9 +34,19 @@ WORKDIR /app/ApiService
 RUN dotnet publish -c Release -o out --no-restore
 
 # Stage 2: Create the runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:3.1
+# Sử dụng image runtime của ASP.NET Core 8.0 làm base cho image cuối cùng.
+# Image này nhỏ gọn hơn và chỉ chứa những gì cần thiết để chạy ứng dụng.
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
+
+# Mở cổng mà ứng dụng Kestrel sẽ lắng nghe bên trong container.
+# Chúng ta sẽ đặt cổng này là 8080 để khớp với việc mapping cổng từ host
+EXPOSE 8080
+
+# Sao chép các file đã publish từ giai đoạn build vào image runtime
 COPY --from=build-env /app/ApiService/out .
 
-ENV ASPNETCORE_URLS=http://+:$PORT
-ENTRYPOINT ["dotnet", "ApiService.dll"]
+# Định nghĩa lệnh khởi động ứng dụng khi container chạy.
+# Chúng ta truyền đối số --urls để Kestrel lắng nghe trên tất cả các địa chỉ IP
+# tại cổng 8080 bên trong container.
+ENTRYPOINT ["dotnet", "ApiService.dll", "--urls", "http://+:8080"]

@@ -16,7 +16,7 @@ namespace ApiService.Implement
     public class QuestionImp : IQuestion
     {
         public async Task<int> CreateQuestion(int topicId, int examId, QuestionType questionType, string content, 
-            JsonDocument questionDataJson, string explanation, Enum_DifficutyLevel difficultyLevel)
+            string questionDataJson, string explanation, Enum_DifficutyLevel difficultyLevel)
         {
             try
             {
@@ -26,7 +26,7 @@ namespace ApiService.Implement
                     new MySqlParameter("@iQuestion_Type", (int)questionType),
                     new MySqlParameter("@iDifficulty_Level", (int)difficultyLevel),
                     new MySqlParameter("@sContent", content),
-                    new MySqlParameter("@jQuestion_Data_Json", questionDataJson.RootElement.ToString()),
+                    new MySqlParameter("@jQuestion_Data_Json", questionDataJson),
                     new MySqlParameter("@sExplanation", explanation ?? (object)DBNull.Value)
                 };
                 
@@ -48,7 +48,7 @@ namespace ApiService.Implement
         }
 
         public async Task<bool> UpdateQuestion(int id, int topicId, int examId, QuestionType questionType, string content,
-            JsonDocument questionDataJson, string explanation, Enum_DifficutyLevel difficultyLevel)
+            string questionDataJson, string explanation, Enum_DifficutyLevel difficultyLevel)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace ApiService.Implement
                     new MySqlParameter("@iQuestion_Type", (int)questionType),
                     new MySqlParameter("@iDifficulty_Level", (int)difficultyLevel),
                     new MySqlParameter("@sContent", content),
-                    new MySqlParameter("@jQuestion_Data_Json", questionDataJson.RootElement.ToString()),
+                    new MySqlParameter("@jQuestion_Data_Json", questionDataJson),
                     new MySqlParameter("@sExplanation", explanation ?? (object)DBNull.Value)
                 };
                 
