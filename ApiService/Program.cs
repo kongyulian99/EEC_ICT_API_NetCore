@@ -117,7 +117,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-    c.RoutePrefix = string.Empty; // Đặt Swagger là trang mặc định
+    c.RoutePrefix = "swagger"; // Đặt Swagger tại đường dẫn /swagger
     
     // Hỗ trợ làm việc ở cả môi trường phát triển và sản xuất
     c.OAuthUsePkce();
