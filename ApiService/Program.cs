@@ -40,7 +40,7 @@ builder.Services.AddCors(options =>
     });
     options.AddPolicy("AllowAngularClientDeploy", policy =>
     {
-        policy.WithOrigins("https://eec-ict-api-netcore.onrender.com/")
+        policy.WithOrigins("http://221.132.33.156/")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
