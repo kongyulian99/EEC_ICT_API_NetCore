@@ -1,5 +1,6 @@
 ﻿using ApiService.Business;
 using ApiService.Common;
+using ApiService.Core;
 using ApiService.Entity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -139,6 +140,8 @@ namespace ApiService.Controllers
                 retval.ReturnStatus.Message = "Dữ liệu không hợp lệ";
                 return Ok(retval);
             }
+
+            user.Password_Hash = Util.HashPassword(user.Password);
             
             var createResult = ServiceFactory.User.CreateUser(user);
             retval.ReturnData = createResult.Result;
@@ -162,7 +165,9 @@ namespace ApiService.Controllers
                 retval.ReturnStatus.Message = "Dữ liệu không hợp lệ";
                 return Ok(retval);
             }
-            
+
+            user.Password_Hash = Util.HashPassword(user.Password);
+
             var updateResult = ServiceFactory.User.UpdateUser(user);
             retval.ReturnData = updateResult.Result;
             retval.ReturnStatus.Code = updateResult.Code;

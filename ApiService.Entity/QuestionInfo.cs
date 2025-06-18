@@ -18,5 +18,6 @@ namespace ApiService.Entity
         public string Difficulty_Level_Name { get; set; }
         public DateTime Created_At { get; set; }
         public DateTime Updated_At { get; set; }
+        public decimal Score { get; set; }
     }
 } 

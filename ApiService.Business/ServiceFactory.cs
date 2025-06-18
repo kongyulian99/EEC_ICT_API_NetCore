@@ -30,5 +30,17 @@ namespace ApiService.Business
         {
             get { return iQuestion ?? (iQuestion = new QuestionImp()); }
         }
+        
+        private static IUserExamAttempt iUserExamAttempt;
+        public static IUserExamAttempt UserExamAttempt
+        {
+            get { return iUserExamAttempt ?? (iUserExamAttempt = new UserExamAttemptImp()); }
+        }
+        
+        private static IUserExamAnswer iUserExamAnswer;
+        public static IUserExamAnswer UserExamAnswer
+        {
+            get { return iUserExamAnswer ?? (iUserExamAnswer = new UserExamAnswerImp()); }
+        }
     }
 }
