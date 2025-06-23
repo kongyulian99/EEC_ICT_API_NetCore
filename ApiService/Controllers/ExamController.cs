@@ -127,7 +127,7 @@ namespace ApiService.Controllers
                 return Ok(retval);
             }
             
-            var result = await ServiceFactory.Exam.UpdateExam(exam.Id, exam.Title, exam.Description, exam.Duration_Minutes, exam.Total_Questions);
+            var result = await ServiceFactory.Exam.UpdateExam(exam);
             if (result)
             {
                 retval.ReturnData = true;
