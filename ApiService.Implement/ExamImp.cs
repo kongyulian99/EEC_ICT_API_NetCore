@@ -14,15 +14,16 @@ namespace ApiService.Implement
 {
     public class ExamImp : IExam
     {
-        public async Task<int> CreateExam(string title, string description, int durationMinutes, int totalQuestions)
+        public async Task<int> CreateExam(ExamInfo exam)
         {
             try
             {
                 MySqlParameter[] param = {
-                    new MySqlParameter("@sTitle", title),
-                    new MySqlParameter("@sDescription", description ?? (object)DBNull.Value),
-                    new MySqlParameter("@iDuration_Minutes", durationMinutes),
-                    new MySqlParameter("@iTotal_Questions", totalQuestions)
+                    new MySqlParameter("@sTitle", exam.Title),
+                    new MySqlParameter("@sDescription", exam.Description ?? (object)DBNull.Value),
+                    new MySqlParameter("@iDuration_Minutes", exam.Duration_Minutes),
+                    new MySqlParameter("@iTotal_Questions", exam.Total_Questions),
+                    new MySqlParameter("@dPass_Score", exam.Pass_Score),
                 };
                 
                 string outVal = "";

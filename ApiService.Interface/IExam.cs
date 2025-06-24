@@ -6,7 +6,7 @@ namespace ApiService.Interface
 {
     public interface IExam
     {
-        Task<int> CreateExam(string title, string description, int durationMinutes, int totalQuestions);
+        Task<int> CreateExam(ExamInfo exam);
         Task<bool> UpdateExam(ExamInfo exam);
         Task<bool> DeleteExam(int id);
         Task<ExamInfo> GetExamById(int id);
