@@ -96,7 +96,8 @@ namespace ApiService.Implement
             MySqlParameter[] param = {
                 new MySqlParameter("@iId", topic.Id),
                 new MySqlParameter("@sName", topic.Name),
-                new MySqlParameter("@sDescription", topic.Description ?? (object)DBNull.Value)
+                new MySqlParameter("@sDescription", topic.Description ?? (object)DBNull.Value),
+                new MySqlParameter("@iParent_Id", topic.Parent_Id ?? (object)DBNull.Value),
             };
             
             string outVal = "";
