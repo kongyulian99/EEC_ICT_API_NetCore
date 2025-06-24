@@ -19,4 +19,31 @@ namespace ApiService.Entity
         public DateTime Created_At { get; set; }
         public DateTime Updated_At { get; set; }
     }
+
+    public class MultipleChoiceAnswerJsonInfo
+    {
+        public List<string> options { get; set; }
+        public int correctOption { get; set; }
+    }
+    
+    public class FillInTheBlankAnswerJsonInfo
+    {
+        public List<string> answers { get; set; }
+        public List<string> segments { get; set; }
+        
+        /// <summary>
+        /// Cấu trúc JSON tương ứng:
+        /// {"answers": ["hay", "ta", "từ"], "segments": ["<p></p>", " là đôi ", " hẹn ước ", " hư vô a<sup>2</sup><p></p>"]}
+        /// </summary>
+    }
+
+    public class TrueFalseAnswerJsonInfo {
+        public bool correctAnswer { get; set; }
+        
+        /// <summary>
+        /// Cấu trúc JSON tương ứng:
+        /// {"correctAnswer": true}
+        /// </summary>
+    }
+    
 } 

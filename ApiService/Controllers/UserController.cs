@@ -166,7 +166,7 @@ namespace ApiService.Controllers
                 return Ok(retval);
             }
 
-            user.Password_Hash = Util.HashPassword(user.Password);
+            //user.Password_Hash = Util.HashPassword(user.Password);
 
             var updateResult = ServiceFactory.User.UpdateUser(user);
             retval.ReturnData = updateResult.Result;

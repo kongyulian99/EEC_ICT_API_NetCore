@@ -15,19 +15,19 @@ namespace ApiService.Implement
 {
     public class QuestionImp : IQuestion
     {
-        public async Task<int> CreateQuestion(int topicId, int examId, QuestionType questionType, string content, 
-            string questionDataJson, string explanation, Enum_DifficutyLevel difficultyLevel)
+        public async Task<int> CreateQuestion(QuestionInfo question)
         {
             try
             {
                 MySqlParameter[] param = {
-                    new MySqlParameter("@iTopic_Id", topicId),
-                    new MySqlParameter("@iExam_Id", examId),
-                    new MySqlParameter("@iQuestion_Type", (int)questionType),
-                    new MySqlParameter("@iDifficulty_Level", (int)difficultyLevel),
-                    new MySqlParameter("@sContent", content),
-                    new MySqlParameter("@jQuestion_Data_Json", questionDataJson),
-                    new MySqlParameter("@sExplanation", explanation ?? (object)DBNull.Value)
+                    new MySqlParameter("@iTopic_Id", question.Topic_Id),
+                    new MySqlParameter("@iExam_Id", question.Exam_Id),
+                    new MySqlParameter("@iQuestion_Type", (int)question.Question_Type),
+                    new MySqlParameter("@iDifficulty_Level", (int)question.Difficulty_Level),
+                    new MySqlParameter("@sContent", question.Content),
+                    new MySqlParameter("@jQuestion_Data_Json", question.Question_Data_Json),
+                    new MySqlParameter("@sExplanation", question.Explanation ?? (object)DBNull.Value),
+                    new MySqlParameter("@dScore", question.Score)
                 };
                 
                 string outVal = "";
@@ -47,20 +47,20 @@ namespace ApiService.Implement
             }
         }
 
-        public async Task<bool> UpdateQuestion(int id, int topicId, int examId, QuestionType questionType, string content,
-            string questionDataJson, string explanation, Enum_DifficutyLevel difficultyLevel)
+        public async Task<bool> UpdateQuestion(QuestionInfo question)
         {
             try
             {
                 MySqlParameter[] param = {
-                    new MySqlParameter("@iId", id),
-                    new MySqlParameter("@iTopic_Id", topicId),
-                    new MySqlParameter("@iExam_Id", examId),
-                    new MySqlParameter("@iQuestion_Type", (int)questionType),
-                    new MySqlParameter("@iDifficulty_Level", (int)difficultyLevel),
-                    new MySqlParameter("@sContent", content),
-                    new MySqlParameter("@jQuestion_Data_Json", questionDataJson),
-                    new MySqlParameter("@sExplanation", explanation ?? (object)DBNull.Value)
+                    new MySqlParameter("@iId", question.Id),
+                    new MySqlParameter("@iTopic_Id", question.Topic_Id),
+                    new MySqlParameter("@iExam_Id", question.Exam_Id),
+                    new MySqlParameter("@iQuestion_Type", (int)question.Question_Type),
+                    new MySqlParameter("@iDifficulty_Level", (int)question.Difficulty_Level),
+                    new MySqlParameter("@sContent", question.Content),
+                    new MySqlParameter("@jQuestion_Data_Json", question.Question_Data_Json),
+                    new MySqlParameter("@sExplanation", question.Explanation ?? (object)DBNull.Value),
+                    new MySqlParameter("@dScore", question.Score)
                 };
                 
                 string outVal = "";

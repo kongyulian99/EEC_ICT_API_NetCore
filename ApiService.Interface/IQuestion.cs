@@ -7,11 +7,9 @@ namespace ApiService.Interface
 {
     public interface IQuestion
     {
-        Task<int> CreateQuestion(int topicId, int examId, QuestionType questionType, string content, 
-            string questionDataJson, string explanation, Enum_DifficutyLevel difficultyLevel);
+        Task<int> CreateQuestion(QuestionInfo question);
             
-        Task<bool> UpdateQuestion(int id, int topicId, int examId, QuestionType questionType, string content,
-            string questionDataJson, string explanation, Enum_DifficutyLevel difficultyLevel);
+        Task<bool> UpdateQuestion(QuestionInfo question);
             
         Task<bool> DeleteQuestion(int id);
         

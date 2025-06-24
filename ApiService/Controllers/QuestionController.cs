@@ -189,14 +189,7 @@ namespace ApiService.Controllers
                 question.Difficulty_Level = Enum_DifficutyLevel.MEDIUM;
             }
             
-            var questionId = await ServiceFactory.Question.CreateQuestion(
-                question.Topic_Id, 
-                question.Exam_Id, 
-                question.Question_Type, 
-                question.Content, 
-                question.Question_Data_Json,
-                question.Explanation, 
-                question.Difficulty_Level);
+            var questionId = await ServiceFactory.Question.CreateQuestion(question);
                 
             if (questionId > 0)
             {
@@ -234,15 +227,7 @@ namespace ApiService.Controllers
                 question.Difficulty_Level = Enum_DifficutyLevel.MEDIUM;
             }
             
-            var result = await ServiceFactory.Question.UpdateQuestion(
-                question.Id,
-                question.Topic_Id, 
-                question.Exam_Id, 
-                question.Question_Type, 
-                question.Content, 
-                question.Question_Data_Json,
-                question.Explanation, 
-                question.Difficulty_Level);
+            var result = await ServiceFactory.Question.UpdateQuestion(question);
                 
             if (result)
             {
