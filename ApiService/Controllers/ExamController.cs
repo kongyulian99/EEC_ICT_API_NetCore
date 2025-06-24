@@ -97,7 +97,7 @@ namespace ApiService.Controllers
                 return Ok(retval);
             }
             
-            var examId = await ServiceFactory.Exam.CreateExam(exam.Title, exam.Description, exam.Duration_Minutes, exam.Total_Questions);
+            var examId = await ServiceFactory.Exam.CreateExam(exam);
             if (examId > 0)
             {
                 retval.ReturnData = examId;
