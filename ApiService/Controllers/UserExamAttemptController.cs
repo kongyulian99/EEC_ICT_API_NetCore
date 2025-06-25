@@ -478,6 +478,14 @@ namespace ApiService.Controllers
                                                     answer.Time_Spent_Seconds
                                                 );
                                                 
+                                                // Cập nhật tổng điểm và số câu đúng/sai trước khi continue
+                                                if (isCorrect)
+                                                    correctAnswers++;
+                                                else
+                                                    incorrectAnswers++;
+                                                    
+                                                totalScore += scoreAchieved;
+                                                
                                                 // Bỏ qua lệnh cập nhật mặc định vì đã cập nhật ở trên
                                                 continue;
                                             }
