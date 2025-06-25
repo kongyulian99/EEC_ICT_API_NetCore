@@ -12,5 +12,7 @@ namespace ApiService.Entity
         public int Total_Questions { get; set; }
         public DateTime Created_At { get; set; }
         public DateTime Updated_At { get; set; }
+        public int Create_User_Id { get; set; }
+        public string Create_User_Name { get; set; }
     }
 } 

@@ -24,6 +24,7 @@ namespace ApiService.Implement
                     new MySqlParameter("@iDuration_Minutes", exam.Duration_Minutes),
                     new MySqlParameter("@iTotal_Questions", exam.Total_Questions),
                     new MySqlParameter("@dPass_Score", exam.Pass_Score),
+                    new MySqlParameter("@iCreate_User_Id", exam.Create_User_Id),
                 };
                 
                 string outVal = "";
