@@ -37,11 +37,11 @@ namespace ApiService.Controllers
         public async Task<IActionResult> InsertUserExamAttempt([FromBody] UserExamAttemptInfo model)
         {
             var retval = new ReturnBaseInfo<object>();
-            retval.ReturnStatus = new StatusBaseInfo { Message = "Thất bại", Code = 0 };
+            retval.ReturnStatus = new StatusBaseInfo { Message = "Failed", Code = 0 };
             
             if (model == null || model.User_Id <= 0 || model.Exam_Id <= 0)
             {
-                retval.ReturnStatus.Message = "Dữ liệu không hợp lệ";
+                retval.ReturnStatus.Message = "Invalid data";
                 return Ok(retval);
             }
             
@@ -53,11 +53,11 @@ namespace ApiService.Controllers
                     AttemptNumber = result.AttemptNumber 
                 };
                 retval.ReturnStatus.Code = 1;
-                retval.ReturnStatus.Message = "Tạo lần làm bài thi thành công";
+                retval.ReturnStatus.Message = "Exam attempt created successfully";
             }
             else
             {
-                retval.ReturnStatus.Message = "Không thể tạo lần làm bài thi";
+                retval.ReturnStatus.Message = "Could not create exam attempt";
             }
             
             return Ok(retval);

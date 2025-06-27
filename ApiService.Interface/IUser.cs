@@ -10,6 +10,7 @@ namespace ApiService.Interface
         DbReturnInfo<int> CreateUser(UserInfo user);
         DbReturnInfo<UserInfo> GetUserById(int id);
         DbReturnInfo<UserInfo> GetUserByUsername(string username);
+        DbReturnInfo<UserInfo> GetUserByEmail(string email);
         DbReturnInfo<int> UpdateUser(UserInfo user);
         DbReturnInfo<int> UpdateUserPassword(int id, string newPasswordHash);
         DbReturnInfo<int> DeleteUser(int id);

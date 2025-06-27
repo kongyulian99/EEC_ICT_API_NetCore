@@ -66,16 +66,16 @@ namespace ApiService.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return await Task.FromResult(new { error = new { message = "Lỗi upload!" } });
+                    return await Task.FromResult(new { error = new { message = "Upload error!" } });
                 }
                 if (total == 0)
                 {
-                    return await Task.FromResult(new { error = new { message = "Không tồn tại file tải lên!" } });
+                    return await Task.FromResult(new { error = new { message = "No file uploaded!" } });
                 }
                 string fileName = file.FileName;
                 if (fileName == "")
                 {
-                    return await Task.FromResult(new { error = new { message = "Không tồn tại file tải lên!" } });
+                    return await Task.FromResult(new { error = new { message = "No file uploaded!" } });
                 }
                 
                 // Tạo tên file mới để tránh trùng lặp

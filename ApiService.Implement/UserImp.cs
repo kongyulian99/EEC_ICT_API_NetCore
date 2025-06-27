@@ -92,6 +92,31 @@ namespace ApiService.Implement
             return retval;
         }
 
+        public DbReturnInfo<UserInfo> GetUserByEmail(string email)
+        {
+            var retval = new DbReturnInfo<UserInfo>();
+            MySqlParameter[] param = {
+                new MySqlParameter("@sEmail", email)
+            };
+            
+            string outVal = "";
+            var users = MySQLDataHelper.ExecuteReaderToList<UserInfo>(ConfigurationHelper.connectString, "GetUserByEmail", param, out outVal);
+            
+            if (users != null && users.Count > 0)
+            {
+                retval.Result = users.FirstOrDefault();
+                retval.Code = 1;
+                retval.Message = "Thành công";
+            }
+            else
+            {
+                retval.Code = 0;
+                retval.Message = "Không tìm thấy người dùng với email này";
+            }
+            
+            return retval;
+        }
+
         public DbReturnInfo<int> UpdateUser(UserInfo user)
         {
             var retval = new DbReturnInfo<int>();

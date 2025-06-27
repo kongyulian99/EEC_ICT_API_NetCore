@@ -1,12 +1,20 @@
 ﻿using ApiService.Entity;
 using ApiService.Implement;
 using ApiService.Interface;
+using Microsoft.Extensions.Configuration;
 using System;
 
 namespace ApiService.Business
 {
     public class ServiceFactory
     {    
+        private static IConfiguration _configuration;
+        
+        public static void SetConfiguration(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        
         private static IUser iUser;
         public static IUser User
         {
@@ -41,6 +49,13 @@ namespace ApiService.Business
         public static IUserExamAnswer UserExamAnswer
         {
             get { return iUserExamAnswer ?? (iUserExamAnswer = new UserExamAnswerImp()); }
+        }
+
+        // mailjet
+        private static IMailjet iMailjet;
+        public static IMailjet Mailjet
+        {
+            get { return iMailjet ?? (iMailjet = new MailjetImp(_configuration)); }
         }
     }
 }

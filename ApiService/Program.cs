@@ -54,6 +54,10 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddSingleton(builder.Configuration.GetSection(nameof(AppSetting)).Get<AppSetting>() ?? new AppSetting());
 ConfigurationHelper.Initialize(builder.Configuration);
+
+// Cài đặt Configuration cho ServiceFactory
+ServiceFactory.SetConfiguration(builder.Configuration);
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = null; // 👈 giữ nguyên tên property
