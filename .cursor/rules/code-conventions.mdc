@@ -1,0 +1,32 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Code Conventions
+
+This project follows specific coding conventions to maintain consistency.
+
+## Naming Conventions
+- Controllers use PascalCase with "Controller" suffix
+- Entity classes use PascalCase with "Info" suffix (e.g., `UserInfo`, `ExamInfo`)
+- Interface names start with "I" prefix
+- Database fields use underscore_case
+- Properties in C# classes use PascalCase
+
+## API Response Format
+- All API responses follow the `ReturnBaseInfo<T>` structure
+- Status information is contained in `ReturnStatus` with Code and Message
+- Actual data is contained in `ReturnData`
+- Success responses use Code = 1, failures use Code <= 0
+
+## Error Handling
+- Exceptions are caught and logged
+- User-friendly error messages are returned in the response
+- Detailed errors are logged but not exposed to clients
+
+## Documentation
+- Public methods include XML documentation comments
+- Complex logic includes inline comments
+- Controllers and models have class-level documentation
+

@@ -1,0 +1,24 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Structure
+
+This is a .NET Core API project with a layered architecture. The main components are:
+
+## Core Components
+- [ApiService](mdc:ApiService) - Main API service containing controllers and models
+- [ApiService.Entity](mdc:ApiService.Entity) - Entity models and data transfer objects
+- [ApiService.Interface](mdc:ApiService.Interface) - Interfaces for services
+- [ApiService.Business](mdc:ApiService.Business) - Business logic layer
+- [ApiService.Implement](mdc:ApiService.Implement) - Implementation of interfaces
+- [ApiService.Core](mdc:ApiService.Core) - Core utilities and helpers
+
+## Key Controllers
+- [ApiService/Controllers/AuthController.cs](mdc:ApiService/Controllers/AuthController.cs) - Authentication controller with login, refresh token, and Google OAuth
+- [ApiService/Controllers/UserExamAttemptController.cs](mdc:ApiService/Controllers/UserExamAttemptController.cs) - Exam attempt management and scoring
+
+## Database
+- [Db](mdc:Db) - Database scripts and migrations
+

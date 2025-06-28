@@ -252,7 +252,7 @@ namespace ApiService.Controllers
                     // Lưu từng câu trả lời mới vào database
                     foreach (var answer in request.Answers)
                     {
-                        await ServiceFactory.UserExamAnswer.InsertUserExamAnswer(
+                        var examInsert = await ServiceFactory.UserExamAnswer.InsertUserExamAnswer(
                             request.UserId,
                             request.ExamId,
                             answer.QuestionId,
@@ -660,6 +660,245 @@ namespace ApiService.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Lỗi khi chấm điểm bài thi");
+                retval.ReturnStatus.Message = "Lỗi xử lý: " + ex.Message;
+            }
+            
+            return Ok(retval);
+        }
+
+        /// <summary>
+        /// Lấy kết quả chi tiết của một lần làm bài thi, bao gồm điểm số, câu trả lời và đáp án
+        /// </summary>
+        [HttpGet("DetailedResult/{attemptId}")]
+        public async Task<IActionResult> GetDetailedAttemptResult(int attemptId)
+        {
+            var retval = new ReturnBaseInfo<object>();
+            retval.ReturnStatus = new StatusBaseInfo { Message = "Thất bại", Code = 0 };
+            
+            if (attemptId <= 0)
+            {
+                retval.ReturnStatus.Message = "ID lần làm bài không hợp lệ";
+                return Ok(retval);
+            }
+            
+            try
+            {
+                // 1. Lấy thông tin lần làm bài
+                var attemptInfo = await ServiceFactory.UserExamAttempt.GetUserExamAttemptById(attemptId);
+                if (attemptInfo == null)
+                {
+                    retval.ReturnStatus.Message = "Không tìm thấy thông tin lần làm bài";
+                    return Ok(retval);
+                }
+                
+                // 2. Lấy thông tin bài thi
+                var examInfo = await ServiceFactory.Exam.GetExamById(attemptInfo.Exam_Id);
+                if (examInfo == null)
+                {
+                    retval.ReturnStatus.Message = "Không tìm thấy thông tin bài thi";
+                    return Ok(retval);
+                }
+                
+                // 3. Lấy danh sách câu trả lời của người dùng
+                var userAnswers = await ServiceFactory.UserExamAnswer.GetUserExamAnswersByAttempt(
+                    attemptInfo.User_Id, 
+                    attemptInfo.Exam_Id, 
+                    attemptInfo.Attempt_Number
+                );
+                
+                if (userAnswers == null || !userAnswers.Any())
+                {
+                    retval.ReturnStatus.Message = "Không tìm thấy câu trả lời cho lần làm bài này";
+                    return Ok(retval);
+                }
+                
+                // 4. Lấy tất cả câu hỏi trong bài thi
+                var questions = await ServiceFactory.Question.GetQuestionsByExamId(attemptInfo.Exam_Id);
+                var questionDict = questions.ToDictionary(q => q.Id);
+                
+                // 5. Tạo danh sách kết quả chi tiết cho từng câu hỏi
+                var detailedQuestions = new List<object>();
+                
+                foreach (var answer in userAnswers)
+                {
+                    if (questionDict.TryGetValue(answer.Question_Id, out var question))
+                    {
+                        // Xử lý dữ liệu câu hỏi và câu trả lời dựa trên loại câu hỏi
+                        dynamic questionData = null;
+                        dynamic userAnswerData = null;
+                        string correctAnswerText = "";
+                        string userAnswerText = "";
+                        
+                        try
+                        {
+                            switch (question.Question_Type)
+                            {
+                                case QuestionType.MULTIPLE_CHOICE:
+                                    questionData = JsonConvert.DeserializeObject<MultipleChoiceAnswerJsonInfo>(question.Question_Data_Json);
+                                    userAnswerData = JsonConvert.DeserializeObject<dynamic>(answer.Answer_Given_Json);
+                                    
+                                    // Lấy đáp án đúng
+                                    int correctOptionIndex = questionData.correctOption;
+                                    if (correctOptionIndex >= 0 && correctOptionIndex < questionData.options.Count)
+                                    {
+                                        correctAnswerText = questionData.options[correctOptionIndex];
+                                    }
+                                    
+                                    // Lấy đáp án của người dùng
+                                    int userOptionIndex = -1;
+                                    if (userAnswerData.correctOption != null)
+                                    {
+                                        userOptionIndex = (int)userAnswerData.correctOption;
+                                    }
+                                    else if (userAnswerData.selected_option_id != null)
+                                    {
+                                        if (int.TryParse(userAnswerData.selected_option_id.ToString(), out int index))
+                                        {
+                                            userOptionIndex = index;
+                                        }
+                                    }
+                                    
+                                    if (userOptionIndex >= 0 && userOptionIndex < questionData.options.Count)
+                                    {
+                                        userAnswerText = questionData.options[userOptionIndex];
+                                    }
+                                    else
+                                    {
+                                        userAnswerText = "Không chọn đáp án";
+                                    }
+                                    break;
+                                    
+                                case QuestionType.FILL_IN_THE_BLANK:
+                                    questionData = JsonConvert.DeserializeObject<FillInTheBlankAnswerJsonInfo>(question.Question_Data_Json);
+                                    userAnswerData = JsonConvert.DeserializeObject<dynamic>(answer.Answer_Given_Json);
+                                    
+                                    // Lấy đáp án đúng
+                                    if (questionData.answers != null && questionData.answers.Count > 0)
+                                    {
+                                        correctAnswerText = string.Join(", ", questionData.answers);
+                                    }
+                                    
+                                    // Lấy đáp án của người dùng
+                                    List<string> userAnswerList = new List<string>();
+                                    if (userAnswerData.answers != null && userAnswerData.answers.Type == Newtonsoft.Json.Linq.JTokenType.Array)
+                                    {
+                                        foreach (var ans in userAnswerData.answers)
+                                        {
+                                            userAnswerList.Add(ans.ToString());
+                                        }
+                                        userAnswerText = string.Join(", ", userAnswerList);
+                                    }
+                                    else if (userAnswerData.text_input != null)
+                                    {
+                                        userAnswerText = userAnswerData.text_input.ToString();
+                                    }
+                                    else
+                                    {
+                                        userAnswerText = "Không có câu trả lời";
+                                    }
+                                    break;
+                                    
+                                case QuestionType.TRUE_FALSE:
+                                    questionData = JsonConvert.DeserializeObject<TrueFalseAnswerJsonInfo>(question.Question_Data_Json);
+                                    userAnswerData = JsonConvert.DeserializeObject<dynamic>(answer.Answer_Given_Json);
+                                    
+                                    // Lấy đáp án đúng
+                                    correctAnswerText = questionData.correctAnswer ? "Đúng" : "Sai";
+                                    
+                                    // Lấy đáp án của người dùng
+                                    bool userAnswer = false;
+                                    if (userAnswerData.correctAnswer != null)
+                                    {
+                                        userAnswer = (bool)userAnswerData.correctAnswer;
+                                    }
+                                    else if (userAnswerData.selected_answer != null)
+                                    {
+                                        userAnswer = (bool)userAnswerData.selected_answer;
+                                    }
+                                    
+                                    userAnswerText = userAnswer ? "Đúng" : "Sai";
+                                    break;
+                                    
+                                default:
+                                    correctAnswerText = "Không xác định";
+                                    userAnswerText = "Không xác định";
+                                    break;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, $"Lỗi khi xử lý dữ liệu câu hỏi ID {question.Id}: {ex.Message}");
+                            correctAnswerText = "Lỗi khi xử lý dữ liệu";
+                            userAnswerText = "Lỗi khi xử lý dữ liệu";
+                        }
+                        
+                        // Tạo đối tượng chi tiết câu hỏi
+                        detailedQuestions.Add(new
+                        {
+                            QuestionId = question.Id,
+                            QuestionText = question.Content,
+                            QuestionType = question.Question_Type.ToString(),
+                            MaxScore = question.Score,
+                            UserScore = answer.Score_Achieved,
+                            IsCorrect = answer.Is_Correct,
+                            UserAnswer = userAnswerText,
+                            CorrectAnswer = correctAnswerText,
+                            Explanation = question.Explanation ?? "Không có giải thích cho câu hỏi này",
+                            //TimeSpent = answer.Time_Spent_Seconds,
+                            QuestionData = questionData,
+                            //UserAnswerData = userAnswerData
+                        });
+                    }
+                }
+                
+                // 6. Tính thời gian làm bài
+                TimeSpan duration = attemptInfo.End_Time.HasValue 
+                    ? attemptInfo.End_Time.Value - attemptInfo.Start_Time 
+                    : DateTime.Now - attemptInfo.Start_Time;
+                
+                // 7. Tính toán số liệu thống kê
+                int totalQuestions = detailedQuestions.Count;
+                int correctAnswers = detailedQuestions.Count(q => ((dynamic)q).IsCorrect);
+                int incorrectAnswers = totalQuestions - correctAnswers;
+                decimal scorePercentage = examInfo.Pass_Score <= 10
+                    ? attemptInfo.Total_Score * 10 // Nếu thang điểm là 10
+                    : attemptInfo.Total_Score;     // Nếu thang điểm là 100
+                
+                // 8. Tạo kết quả trả về
+                retval.ReturnData = new
+                {
+                    AttemptInfo = new
+                    {
+                        AttemptId = attemptInfo.Id,
+                        AttemptNumber = attemptInfo.Attempt_Number,
+                        UserId = attemptInfo.User_Id,
+                        ExamId = attemptInfo.Exam_Id,
+                        ExamTitle = examInfo.Title,
+                        TotalScore = attemptInfo.Total_Score,
+                        PassScore = examInfo.Pass_Score,
+                        Passed = attemptInfo.Passed,
+                        ScorePercentage = scorePercentage,
+                        StartTime = attemptInfo.Start_Time,
+                        EndTime = attemptInfo.End_Time ?? DateTime.Now,
+                        Duration = $"{duration.Hours:D2}:{duration.Minutes:D2}:{duration.Seconds:D2}",
+                        TotalTimeInSeconds = (int)duration.TotalSeconds
+                    },
+                    Statistics = new
+                    {
+                        TotalQuestions = totalQuestions,
+                        CorrectAnswers = correctAnswers,
+                        IncorrectAnswers = incorrectAnswers,
+                        CorrectPercentage = totalQuestions > 0 ? Math.Round((decimal)correctAnswers / totalQuestions * 100, 2) : 0
+                    },
+                    Questions = detailedQuestions
+                };
+                
+                retval.ReturnStatus.Code = 1;
+                retval.ReturnStatus.Message = "Lấy kết quả chi tiết thành công";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi lấy kết quả chi tiết lần làm bài");
                 retval.ReturnStatus.Message = "Lỗi xử lý: " + ex.Message;
             }
             

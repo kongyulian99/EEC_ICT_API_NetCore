@@ -81,6 +81,36 @@ namespace ApiService.Implement
             }
         }
 
+        public async Task<IEnumerable<UserExamAnswerInfo>> GetUserExamAnswersByUserId(int userId)
+        {
+            try
+            {
+                MySqlParameter[] param = {
+                    new MySqlParameter("@p_User_Id", userId)
+                };
+
+                string outVal = "";
+                var answers = MySQLDataHelper.ExecuteReaderToList<UserExamAnswerInfo>(
+                    ConfigurationHelper.connectString,
+                    "GetUserExamAnswersByUserId",
+                    param,
+                    out outVal
+                );
+
+                if (answers != null)
+                {
+                    return answers;
+                }
+
+                return new List<UserExamAnswerInfo>();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return new List<UserExamAnswerInfo>();
+            }
+        }
+
         public async Task<bool> UpdateUserExamAnswer(int id, string answerGivenJson, bool isCorrect, decimal scoreAchieved, int timeSpentSeconds)
         {
             try

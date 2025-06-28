@@ -1,0 +1,25 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Authentication System
+
+The authentication system in this project supports multiple authentication methods:
+
+## JWT Authentication
+- Uses symmetric key encryption with HMAC SHA256
+- Token lifetime and refresh token settings are configured in AppSetting
+- Tokens contain claims for UserName, UserId, IsAdmin, and ForceLogoutKey
+
+## Google OAuth Authentication
+- Supports login with Google OAuth
+- Parses JWT tokens from Google to extract user information
+- Creates new users automatically when a new Google account logs in
+- See [ApiService/Controllers/AuthController.cs](mdc:ApiService/Controllers/AuthController.cs) for implementation
+
+## Token Refresh
+- Refresh tokens have longer expiration than access tokens
+- The system verifies token validity before issuing new tokens
+- User information is cached for faster access
+

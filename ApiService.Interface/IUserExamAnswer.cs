@@ -8,6 +8,7 @@ namespace ApiService.Interface
     {
         Task<int> InsertUserExamAnswer(int userId, int examId, int questionId, int attemptNumber, string answerGivenJson, int timeSpentSeconds);
         Task<IEnumerable<UserExamAnswerInfo>> GetUserExamAnswersByAttempt(int userId, int examId, int attemptNumber);
+        Task<IEnumerable<UserExamAnswerInfo>> GetUserExamAnswersByUserId(int userId);
         Task<bool> UpdateUserExamAnswer(int id, string answerGivenJson, bool isCorrect, decimal scoreAchieved, int timeSpentSeconds);
         Task<bool> DeleteUserExamAnswer(int id);
     }
