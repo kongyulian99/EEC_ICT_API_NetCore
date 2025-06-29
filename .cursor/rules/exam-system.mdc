@@ -3,3 +3,31 @@ description:
 globs:
 alwaysApply: false
 ---
+# Exam System
+
+The exam system manages online exams, user attempts, and scoring.
+
+## Key Components
+
+### Question Types
+- Multiple Choice: Single option selection with one correct answer
+- Fill in the Blank: Text input with one or more correct answers
+- True/False: Boolean selection questions
+
+### Exam Attempts
+- Users can attempt exams multiple times
+- Each attempt is tracked with start and end times
+- Scoring is calculated based on correct answers
+- See [ApiService/Controllers/UserExamAttemptController.cs](mdc:ApiService/Controllers/UserExamAttemptController.cs)
+
+### Scoring System
+- Each question has a defined score value
+- Fill in the blank questions support partial scoring
+- Final scores are normalized to a scale of 10 or 100
+- Pass/fail is determined by comparing to the exam's pass score
+
+### Result Analysis
+- Detailed results show correct answers and explanations
+- Statistics include correct/incorrect answer counts
+- Progress tracking shows improvement over time
+- Score distribution provides insights into performance

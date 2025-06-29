@@ -57,5 +57,12 @@ namespace ApiService.Business
         {
             get { return iMailjet ?? (iMailjet = new MailjetImp(_configuration)); }
         }
+        
+        // dashboard
+        private static IDashboard iDashboard;
+        public static IDashboard Dashboard
+        {
+            get { return iDashboard ?? (iDashboard = new DashboardImp()); }
+        }
     }
 }
