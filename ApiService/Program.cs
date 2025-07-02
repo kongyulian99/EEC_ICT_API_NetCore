@@ -46,7 +46,10 @@ builder.Services.AddCors(options =>
     });
     options.AddPolicy("AllowAngularClientDeploy", policy =>
     {
-        policy.WithOrigins("http://221.132.33.156")
+        //policy.WithOrigins("http://221.132.33.156")
+        //      .AllowAnyHeader()
+        //      .AllowAnyMethod();
+        policy.WithOrigins("http://app.igcse-hub.com", "http://221.132.33.156")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
